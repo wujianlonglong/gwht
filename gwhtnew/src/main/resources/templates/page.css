@@ -1,0 +1,17 @@
+/*分页*/
+.pagination{ position: relative; height: 30px;line-height: 30px; padding: 15px 0 15px; color:$grey-darker; text-align: right;
+div{ display: inline-block;}
+a {  display: inline-block; height: 24px; line-height: 24px; padding: 0px 10px; margin: 0px 3px; font-size: 12px; border: 1px solid $grey-h-light; border-radius: 3px;  background-color: #FFF; color:$grey-darker;  text-decoration: none;
+&:hover,&.curp{ border: 1px solid #e73839;background-color: #e73839; color: #FFF;}
+&.disable{ color: #ccc; cursor: default; border: 1px solid $grey-mid-light;
+&:hover{color: #ccc;border: 1px solid $grey-mid-light;  background-color: #FFF;}
+}
+}
+span{ padding: 4px 8px; margin: 10px 3px; font-size: 12px;}
+#gopage {width: 26px; text-align: center; height: 24px; line-height: 24px; padding: 0px 3px; margin: 0px 6px 0 3px; font-size: 12px; border: 1px solid $grey-h-light; border-radius: 3px;  background-color: #FFF; color: $grey-mid;}
+.gobtn{ margin-left: 9px; cursor: pointer; width: 40px; height: 24px;line-height: 24px; text-align: center; border: 1px solid $grey-h-light; border-radius: 3px;  background-color: $grey-mid-light; color:$grey-darker; }
+.page_tips{ position: absolute; top:-24px; right:20px; z-index: 6; min-width: 100px; background-color: #fffdee;  height: 30px;  line-height: 30px;  border: 1px solid #edd288;  color: #f60;  padding: 0 10px; text-align: center;
+i{ position: absolute;  bottom: -10px;  left:55px;  background: url(/common/images/index.png) 100% -503px no-repeat;  height: 12px;  width: 18px;   }
+&.hide{ display: none;}
+}
+}

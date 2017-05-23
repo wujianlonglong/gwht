@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="css/base.css" rel="stylesheet" type="text/css"/>
+    <link href="js/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="css/page.css" rel="stylesheet"  type="text/css"/>
+    <!--<script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>-->
+    <!--<script src="js/jquery-ui-1.11.4.custom/jquery-ui.js" type="text/javascript"></script>-->
+    <!--<script src="js/power/userinfo.js"></script>-->
+</head>
+<body>
+
+<!-- 数据栏 -->
+<div id="dataBar" class="content">
+    <table id="datalist" cellpadding="0" cellspacing="0" class="table">
+        <tbody>
+        <tr class="e">
+            <td>角色编号</td>
+            <td>角色名</td>
+            <td>排列序号</td>
+            <td>备注说明</td>
+            <td>创建时间</td>
+            <td>菜单</td>
+            <td>操作</td>
+        </tr>
+        <tr th:each="role:${datalist}">
+            <td th:text="${role.roleId}"></td>
+            <td th:text="${role.roleName}"></td>
+            <td th:text="${role.showOder}"></td>
+            <td th:text="${role.comments}"></td>
+            <td th:text="${role.createTime}"></td>
+            <td><a style="color:blue;" th:onclick="'getMenu('+${role.roleId}+')'">菜单编辑</a></td>
+            <td><a  style="color:blue;" th:onclick="'updateData(\''+${role.roleName}+'\','+${role.showOder}+',\''+${role.comments}+'\','+${role.roleId}+')'">编辑</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 修改的分页 -->
+<div class="pagination" style="text-align:left;" id="page" th:with="maxShowPage=7" th:if="${hasOrder}==true">
+    <div th:if="${totalCount}==0"></div>
+    <a th:if="(${totalCount}!=0) and (${pageNum}==1)" th:attr="href='javascript:void(0);',rev='prev',class='disable'"
+       th:utext="上一页" >
+    </a>
+    <a th:if="(${totalCount}!=0) and (${pageNum}&gt;1)" th:attr="href='#',rev='prev'" th:utext="上一页" th:onclick="'page('+(${pageNum}-1)+')'">
+    </a>
+    <!--不满7页，全部展示-->
+    <span th:if="(${totalCount}!=0)and (${totalPage}&gt;0) and (${totalPage}&lt;(${maxShowPage}+1))">
+        <span th:each="i : ${#numbers.sequence( 1, totalPage)}">
+            <a th:if="(${pageNum})==${i}" th:attr="href='javascript:void(0);',class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'">
+            </a>
+            <a th:if="(${pageNum})!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'">
+            </a>
+        </span>
+    </span>
+    <!-- 总页数多于7页，当前小于等于5，前7页全部展示，后面展示为..-->
+    <span th:if="(${totalPage}&gt;${maxShowPage}) and (${pageNum}&lt;(${maxShowPage}-1))">
+        <span th:each="i : ${#numbers.sequence( 1, maxShowPage)}">
+            <a th:if="(${pageNum})==${i}" th:attr="href='javascript:void(0);',class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'">
+            </a>
+            <a th:if="(${pageNum})!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'">
+            </a>
+        </span>
+        <a th:attr="href='javascript:void(0);',class='disable'"><i th:utext="..."></i>
+        </a>
+    </span>
+    <!--总页数多于7页，当前大于5-->
+    <span th:if="(${totalPage}&gt;${maxShowPage}) and (${pageNum}&gt;(${maxShowPage}-2))">
+        <a th:attr="href='javascript:void(0);'" th:utext="1"></a>
+        <a th:attr="href='javascript:void(0);'" th:utext="2"></a>
+        <a th:attr="href='javascript:void(0);',class='disable'"><i th:utext="..."></i></a>
+        <span th:if="(${pageNum} + 3) &gt;${totalPage}" th:each="i : ${#numbers.sequence( totalPage - 4, totalPage)}">
+            <!--<div th:each="i : ${#numbers.sequence( pageNum - 1,  ((pageNum + 3) &gt; totalPage) ? totalPage:(pageNum + 3)}">-->
+            <a th:if="(${pageNum})==${i}" th:attr="href='javascript:void(0);', class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'"></a>
+            <a th:if="(${pageNum})!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'"></a>
+        </span>
+        <span th:if="(${pageNum} + 3) &lt;(${totalPage}+1)"
+              th:each="i : ${#numbers.sequence( pageNum - 1, pageNum + 3)}">
+            <!--<div th:each="i : ${#numbers.sequence( pageNum - 1,  ((pageNum + 3) &gt; totalPage) ? totalPage:(pageNum + 3)}">-->
+            <a th:if="(${pageNum})==${i}" th:attr="href='javascript:void(0);', class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'"></a>
+            <a th:if="(${pageNum})!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'"></a>
+        </span>
+        <a th:if="(${pageNum})&lt;(${totalPage}-2)"
+           th:attr=" href='javascript:void(0);', class='disable'"><i th:utext="..."></i>
+        </a>
+    </span>
+    <a th:if="(${totalCount}!=0) and (${pageNum}==(${totalPage}))"
+       th:attr="href='javascript:void(0);',rev='next',class='disable'" th:utext="下一页" >
+    </a>
+    <a th:if="(${totalCount}!=0) and (${pageNum}!=(${totalPage}))" th:attr="href='#',rev='next'" th:utext="下一页"  th:onclick="'page('+(${pageNum}+1)+')'">
+    </a>
+    <span th:utext="|共${totalPage}页  ${totalCount}行|"></span>
+    跳转第
+    <input id="pagenum" type="text"  th:value="${pageNum}"/>
+    页
+    <select id="pagesize">
+        <option value="10" th:selected="${pageSize==10}">10</option>
+        <option value="15" th:selected="${pageSize==15}">15</option>
+        <option value="20" th:selected="${pageSize==20}">20</option>
+        <option value="25" th:selected="${pageSize==25}">25</option>
+        <option value="30" th:selected="${pageSize==30}">30</option>
+    </select>
+    <input class="gobtn" id="gobtn" type="button" value="确定" onclick="jump()"/>
+    <div class="page_tips hide" style="display: none;"><i></i>请输入正确的数字！</div>
+</div>
+<!-- 分页 -->
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <!--<link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>-->
+    <!--<link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet"/>-->
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="css/base.css" rel="stylesheet" type="text/css"/>
+    <link href="js/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui-1.11.4.custom/jquery-ui.js" type="text/javascript"></script>
+    <script src="js/power/userinfo.js"></script>
+</head>
+<body>
+<!--过滤-->
+<div class="searchBar">
+    <div class="titleBar">
+        <span class="icoT"></span>
+        <div class="title" id="Div2">
+            搜索栏
+        </div>
+    </div>
+    <div class="filterBar" style="text-align: left;">
+        用户名/昵称/部门：
+        <input id="ConditionInput" type="text" style="width: 30%"/>
+        <input id="SearchInput" type="button" value="搜索" class="sjmsbutton1" onclick="SearchData();"/>
+        <input id="Button2" type="button" value="刷新用户缓存" class="sjmsbutton1" onclick="RefreshUserInfo();"
+               style="margin-left: 150px;"/>
+    </div>
+</div>
+<div class="titleBar" style="text-align:left">
+    <input type="button" onclick="newData();" value="新增用户"/>
+</div>
+<div id="tmp">
+    <!-- 数据栏 -->
+    <div id="dataBar" class="content">
+        <table id="datalist" cellpadding="0" cellspacing="0" class="table">
+            <tbody>
+            <tr class="e">
+                <td>用户编号</td>
+                <td>用户名</td>
+                <td>用户昵称</td>
+                <td>部门</td>
+                <td>创建时间</td>
+                <td>角色</td>
+                <td>操作</td>
+            </tr>
+            <tr th:each="user:${userlist}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.userName}"></td>
+                <td th:text="${user.nickName}"></td>
+                <td th:text="${user.department}"></td>
+                <td th:text="${user.createTime}"></td>
+                <td><a style="color:blue;" th:onclick="'getRole('+${user.id}+')'">角色编辑</a></td>
+                <td>
+                    <a th:onclick="'updateData(\''+${user.nickName}+'\',\''+${user.department}+'\','+${user.id}+')'">编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 修改的分页 -->
+    <div class="pagination" style="text-align:left;" id="page" th:with="maxShowPage=7" th:if="${hasOrder}==true">
+        <div th:if="${totalCount}==0"></div>
+        <a th:if="(${totalCount}!=0) and (${pageNum}==0)"
+           th:attr="href='javascript:void(0);',rev='prev',class='disable'"
+           th:utext="上一页">
+        </a>
+        <a th:if="(${totalCount}!=0) and (${pageNum}!=0)" th:attr="href='#',rev='prev'" th:utext="上一页">
+        </a>
+        <!--不满7页，全部展示-->
+        <span th:if="(${totalCount}!=0)and (${totalPage}&gt;-1) and (${totalPage}&lt;(${maxShowPage}+1))">
+        <span th:each="i : ${#numbers.sequence( 1, totalPage)}">
+            <a th:if="(${pageNum}+1)==${i}" th:attr="href='javascript:void(0);',class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'">
+            </a>
+            <a th:if="(${pageNum}+1)!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'">
+            </a>
+        </span>
+    </span>
+        <!-- 总页数多于7页，当前小于等于5，前7页全部展示，后面展示为..-->
+        <span th:if="(${totalPage}&gt;${maxShowPage}) and (${pageNum}&lt;(${maxShowPage}-2))">
+        <span th:each="i : ${#numbers.sequence( 1, maxShowPage)}">
+            <a th:if="(${pageNum}+1)==${i}" th:attr="href='javascript:void(0);',class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'">
+            </a>
+            <a th:if="(${pageNum}+1)!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'">
+            </a>
+        </span>
+        <a th:attr="href='javascript:void(0);',class='disable'"><i th:utext="..."></i>
+        </a>
+    </span>
+        <!--总页数多于7页，当前大于5-->
+        <span th:if="(${totalPage}&gt;${maxShowPage}) and (${pageNum}&gt;(${maxShowPage}-3))">
+        <a th:attr="href='javascript:void(0);'" th:utext="1"></a>
+        <a th:attr="href='javascript:void(0);'" th:utext="2"></a>
+        <a th:attr="href='javascript:void(0);',class='disable'"><i th:utext="..."></i></a>
+        <span th:if="(${pageNum} + 3) &gt;${totalPage}" th:each="i : ${#numbers.sequence( totalPage - 4, totalPage)}">
+            <!--<div th:each="i : ${#numbers.sequence( pageNum - 1,  ((pageNum + 3) &gt; totalPage) ? totalPage:(pageNum + 3)}">-->
+            <a th:if="(${pageNum}+1)==${i}" th:attr="href='javascript:void(0);', class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'"></a>
+            <a th:if="(${pageNum}+1)!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'"></a>
+        </span>
+        <span th:if="(${pageNum} + 3) &lt;(${totalPage}+1)"
+              th:each="i : ${#numbers.sequence( pageNum - 1, pageNum + 3)}">
+            <!--<div th:each="i : ${#numbers.sequence( pageNum - 1,  ((pageNum + 3) &gt; totalPage) ? totalPage:(pageNum + 3)}">-->
+            <a th:if="(${pageNum}+1)==${i}" th:attr="href='javascript:void(0);', class='curp'" th:utext="${i}"
+               th:onclick="'page('+${i}+')'"></a>
+            <a th:if="(${pageNum}+1)!=${i}" th:attr="href='#'" th:utext="${i}" th:onclick="'page('+${i}+')'"></a>
+        </span>
+        <a th:if="(${pageNum}+1)&lt;(${totalPage}-2)"
+           th:attr=" href='javascript:void(0);', class='disable'"><i th:utext="..."></i>
+        </a>
+    </span>
+        <a th:if="(${totalCount}!=0) and (${pageNum}==(${totalPage}-1))"
+           th:attr="href='javascript:void(0);',rev='next',class='disable'" th:utext="下一页">
+        </a>
+        <a th:if="(${totalCount}!=0) and (${pageNum}!=(${totalPage}-1))" th:attr="href='#',rev='next'" th:utext="下一页">
+        </a>
+        <span th:utext="|共${totalPage}页  ${totalCount}行|"></span>
+        跳转第
+        <input id="pagenum" type="text"/>
+        页
+        <select id="pagesize">
+            <option value="10" th:selected="${pageSize==10}">10</option>
+            <option value="15" th:selected="${pageSize==15}">15</option>
+            <option value="20" th:selected="${pageSize==20}">20</option>
+            <option value="25" th:selected="${pageSize==25}">25</option>
+            <option value="30" th:selected="${pageSize==30}">30</option>
+        </select>
+        <input class="gobtn" id="gobtn" type="button" value="确定" onclick="jump()"/>
+        <div class="page_tips hide" style="display: none;"><i></i>请输入正确的数字！</div>
+    </div>
+    <!-- 分页 -->
+</div>
+
+<!--Dialog-->
+<div style="display:none">
+    <div id="dialog_data_detail" class="updateDetail" title="用户信息">
+        <form>
+            <fieldset class="ui-helper-reset">
+                <div>
+                    <div name="user_id">
+                        <span>用户编号： </span>
+                        <input type="text" id="user_id" disabled="disabled"/>&nbsp;&nbsp;
+                    </div>
+                    <div name="user_name">
+                        <span>用户名： </span>
+                        <input type="text" id="user_name"/>&nbsp;&nbsp;
+                    </div>
+                    <div name="user_password">
+                        <span>密码： </span>
+                        <input type="text" id="user_password"/>
+                    </div>
+                    <div name="user_nickname">
+                        <span>用户昵称： </span>
+                        <input type="text" id="user_nickname"/>&nbsp;&nbsp;
+                    </div>
+                    <div name="department">
+                        <span>部门： </span>
+                        <input type="text" id="department"/>&nbsp;&nbsp;
+                    </div>
+                    <div name="create_time">
+                        <span>创建时间： </span>
+                        <input type="text" id="create_time" style=" width:120px;" disabled="disabled"/>&nbsp;&nbsp;
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+
+    <div id="dialog_role_detail" class="updateDetail" title="角色信息">
+
+    </div>
+
+</div>
+</body>
+</html>

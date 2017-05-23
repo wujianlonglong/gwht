@@ -1,0 +1,55 @@
+server:
+  port: 6456
+  session:
+    timeout: 1200
+spring:
+  datasource:
+    driverClassName: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@193.0.10.45:1521:SJOM
+    username: SJOW
+    password: sjos$1045
+    poolSize: 100
+    max-active: 50
+    min-idle: 10
+    max-idle: 10
+    initial-size: 15
+    max-wait: 40
+    test-on-borrow: true
+    validation-query: SELECT 1 FROM DUAL
+
+  thymeleaf:
+     check-template-location: true
+     prefix: classPath:/templates/
+     suffix: .html
+     mode: HTML5
+     encoding: UTF-8
+     content-type: text/html
+     cache: false
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        hbm2ddl:
+          auto: update
+
+# 设置redis服务
+  redis:
+    database: 0
+    host: localhost
+#    host: srv3.sanjiang.info
+    port: 6379
+
+
+fileload:
+  gwimgurl: http://home.sanjiang.com/img/
+  gwhtimgurl: D:/www/sjow/img/
+  gwnewsrefreshurl: http://home.sanjiang.com/service/CacheManage.asmx/
+
+#  gwimgurl: loadimg/
+#  gwhtimgurl: F:\JavaProjects\CompanyProject\gwhtnew\src\main\resources\static\loadimg\
+#  gwnewsrefreshurl:  http://localhost:36906/service/CacheManage.asmx/
+#  gwimgurl:  http://localhost:36906/loadimg/
+#  gwhtimgurl: F:\Project\SJOW\SJOW.Web\loadimg\
+

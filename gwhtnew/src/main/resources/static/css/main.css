@@ -1,0 +1,34 @@
+﻿
+/*顶部导航*/
+.top{height:70px; background:url(../images/top_left.jpg) right repeat-x;width:100%;}
+.top .logo{ float:left; margin-right:20px; height:70px; width:270px; overflow:hidden}
+
+
+
+.top .user{ float:right; margin-right:20px;position:relative;z-index:999}
+.top .user p{ color:#fff; line-height:39px; margin-top:15px; float:left;display:block;}
+.top .user .user_pic{ position:relative; width:50px; height:50px; margin:15px 10px 5px 10px; float:left}
+.top .user .user_pic img{ border:3px solid #2a7159 ; border-radius:30px ; height:44px; width:44px; }
+.top .user .user_pic span{ background:url(../images/all_bg.png) 0 -89px no-repeat; width:10px; height:10px; display:block; position:absolute; top:0; right:0;}
+.dropdown-menu { position: absolute; top: 65px; right:0px; z-index: 9999;float: left; min-width:135px; padding:  0; font-size: 14px; display: none; background-color: #ffffff; border: 1px solid #cccccc; border: 1px solid gba(0, 0, 0, 0.15);}
+.top .user .user_set{}
+.top .user .user_set li{ line-height:27px; height:27px;}
+.top .user .user_set li a{ color:#333333; text-align:left;}
+.top .user .user_set li a:hover{ color:#517b6d}
+.top .user .user_set li .a1{ background:url(../images/all_bg.png) -176px -118px no-repeat; padding-left:25px; margin-left:8px; display:block}
+.top .user .user_set li .a2{ background:url(../images/all_bg.png) -176px -145px no-repeat; padding-left:25px; margin-left:8px;display:block}
+.top .user .user_set li .a3{ background:url(../images/all_bg.png) -176px -173px no-repeat; padding-left:25px; margin-left:8px;display:block}
+.top .user .user_set li .a4{ background:url(../images/all_bg.png) -176px -200px no-repeat; padding-left:25px; margin-left:8px;display:block}
+.top .user .user_set li .a5{ background:url(../images/all_bg.png) -176px -227px no-repeat; padding-left:25px; margin-left:8px;display:block}
+.top .user .user_set li .a6{ background:url(../images/all_bg.png) -176px -254px no-repeat; padding-left:25px; margin-left:8px;display:block}
+.cor{width:0px; position:absolute; top:-10px; right:10px;
+  height:0px; 
+  border-left:10px solid transparent  ;  /* left arrow slant */
+  border-right:10px solid transparent  ; /* right arrow slant */
+  border-bottom:10px solid #fff; /* bottom, add background color here */
+  font-size:0px;
+  line-height:0px;}
+
+
+
+.content{ position:relative; z-index:1;width:100%;}
