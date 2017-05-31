@@ -122,5 +122,6 @@ public class MainController {
     public String newslist(){return "news/newslist";}
 
 
-
+    @RequestMapping(value="/memorabilialist",method=RequestMethod.GET)
+    public String memorabilialist(){return "news/memorabilialist";}
 }

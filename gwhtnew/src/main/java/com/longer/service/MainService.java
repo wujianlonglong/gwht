@@ -1,5 +1,6 @@
 package com.longer.service;
 
+
 import com.longer.business.PowerBusiness;
 import com.longer.common.Common;
 import com.longer.domain.MenuInfo;
@@ -7,6 +8,8 @@ import com.longer.domain.UserInfo;
 import com.longer.model.ApiReturnBody;
 import com.longer.utils.constant.NormalConstant;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ import static com.longer.common.Common.EncryptionStrBytes;
  */
 @Service
 public class MainService {
+
+    private static  final Logger log= LoggerFactory.getLogger(MainService.class);
 
 
     @Autowired
@@ -113,9 +118,8 @@ public class MainService {
             result.setSuccess(true);
 
         } catch (Exception ex) {
-            result.setMsg("修改密码失败：" + ex.toString());
-//            result.setCode(NormalConstant.FAILE_CODE);
-//            result.setSuccess(false);
+            log.error("修改用户"+userId+"密码失败：" + ex.toString());
+            result.setMsg("修改密码失败,请重试！" );
             return result;
         }
         return result;

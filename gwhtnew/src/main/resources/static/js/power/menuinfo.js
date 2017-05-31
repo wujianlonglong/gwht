@@ -92,7 +92,7 @@ function getTree() {
     var objArray = new Array(); //对象数组
     var rootobj = new zNode(0, -1, "root", true, true);
     objArray.push(rootobj);
-    $.post("/getMenuTree", {rootParentId: 0}, function (json) {
+    $.post("getMenuTree", {rootParentId: 0}, function (json) {
         if (json.success) {
             for (var i = 0; i < json.data.length; i++) {
                 if (json.data[i].menuId.length != 0) {
@@ -115,7 +115,7 @@ function getTree() {
 
 //获取父级菜单下拉框
 function getMenuSelect() {
-    $.post("/getMenuTree", {rootParentId: 0}, function (json) {
+    $.post("getMenuTree", {rootParentId: 0}, function (json) {
         var text = "<option value='0'>root</option>";
         for (var i = 0; i < json.data.length; i++) {
             text = text + "<option value='" + json.data[i].menuId + "'>" + json.data[i].menuName + "</option>";
@@ -167,7 +167,7 @@ function submitData() {
     model.status = status;
 
     $.ajax({
-        url: "/addMenu",
+        url: "addMenu",
         type: "post",
         async: false,
         contentType: "application/json;charset=utf-8",
@@ -210,7 +210,7 @@ function getList(e, treeId, treeNode) {
 
 function getPaAndChilMenu(menuId) {
     $.ajax({
-        url: "/getPaAndChilMenu",
+        url: "getPaAndChilMenu",
         type: "get",
         async: false,
         data: {menuId: menuId},
@@ -256,7 +256,7 @@ function getPaAndChilMenu(menuId) {
 
 function RefreshMenuInfo() {
     $.ajax({
-        url: "/redis/refreshMenuInfo",
+        url: "redis/refreshMenuInfo",
         type: "post",
         async: false,
         success: function (data) {
@@ -333,7 +333,7 @@ function updateData() {
     model.createTime = new Date(createTime).getTime();
 
     $.ajax({
-        url: "/updateMenu",
+        url: "updateMenu",
         type: "post",
         async: false,
         contentType: "application/json;charset=utf-8",
@@ -406,7 +406,7 @@ function deleteMenu(menuId, parentMenuId) {
     if (!confirm("确认删除" + menuId + "菜单？"))
         return;
     $.ajax({
-        url: "/deleteMenu",
+        url: "deleteMenu",
         type: "post",
         async: false,
         data: {menuId: menuId},

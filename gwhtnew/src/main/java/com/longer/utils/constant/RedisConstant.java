@@ -17,4 +17,6 @@ public interface RedisConstant {
     String All_ROLE_INFO="allRoleInfo";
 
     String ALL_NEWS_INFO_TEST="allNewsInfoTest";
+
+    String All_MEMORABILIA="allMemorabilia";
 }

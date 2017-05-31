@@ -5,6 +5,8 @@ import com.longer.common.Common;
 import com.longer.domain.UserInfo;
 import com.longer.repository.UserInfoRepository;
 import com.longer.utils.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ import static com.longer.common.Common.EncryptionStrBytes;
  */
 @Service
 public class LoginService {
+
+    private static final Logger log= LoggerFactory.getLogger(LoginService.class);
 
     @Autowired
     PowerBusiness powerBusiness;

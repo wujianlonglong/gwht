@@ -1,13 +1,13 @@
 /**
- * Created by wujianlong on 2017/5/22.
+ * Created by wujianlong on 2017/5/23.
  */
 var editor = null;
 $(function () {
 
     editor = CKEDITOR.replace("cke_companyNewContent", {
         filebrowserImageUploadUrl: 'imgUpload',
-        filebrowserFlashUploadUrl: 'imgUpload',
-        image_previewText: ' ',
+        filebrowserFlashUploadUrl:'imgUpload',
+        image_previewText:' ',
         height: 400
     });
 
@@ -21,24 +21,17 @@ $(function () {
 });
 
 function Back() {
-    //window.history.back(-1);
-    parent.RemoveDiv('0001' + $('#newId').val())
+   // window.history.back(-1);
+    parent.RemoveDiv('0002'+$('#memroId').val())
 }
 
 
-function addNews() {
+function addmemor() {
     if (!confirm("确认提交？"))
         return;
 
     var model = new Object();
-    model.newsId = $('#newId').val();
-    model.newType = $('#newtype').val();
-    if ($.trim($('#tb_companyNewsTitle').val()).length <=0) {
-        alert("新闻标题不能为空！");
-        return;
-    }
-    model.newsTitle = $('#tb_companyNewsTitle').val();
-    model.isTop = $('#cb_isTop').is(':checked') ? '1' : '0';
+    model.id = $('#memroId').val();
     if ($.trim($('#datepicker').val()).length <=0) {
         alert("发布日期不能为空！");
     }
@@ -46,17 +39,16 @@ function addNews() {
         alert("发布日期的时间格式不正确");
         return;
     }
-    model.showTime = new Date($('#datepicker').val()).getTime();
-    model.showSource = $('#tb_newSource').val();
+    model.happenDate = new Date($('#datepicker').val()).getTime();
+
     if ($.trim(editor.getData()).length <=0) {
         alert("新闻内容不能为空！");
         return;
     }
-    model.newsContent = editor.getData();
-
+    model.content = editor.getData();
 
     $.ajax({
-        url: "subNews",
+        url: "subMemor",
         async: false,
         type: "post",
         contentType: "application/json;charset=utf-8",
@@ -64,8 +56,8 @@ function addNews() {
         success: function (data) {
             alert(data.msg);
             if (data.success) {
-                //window.location.href="newslist";
-                parent.RemoveDiv('0001' + $('#newId').val())
+                //window.location.href="memorabilialist";
+                parent.RemoveDiv('0002'+$('#memroId').val())
             }
         }
     });

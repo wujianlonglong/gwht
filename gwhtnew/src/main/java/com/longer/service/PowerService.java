@@ -56,10 +56,8 @@ public class PowerService {
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setSuccess(true);
         } catch (Exception ex) {
-            log.error("更新用户失败：" + ex.toString());
-            result.setMsg("更新用户失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            log.error("更新用户"+userInfo.getUserName()+"失败：" + ex.toString());
+            result.setMsg("更新用户失败,请重试！");
             return result;
         }
 
@@ -91,11 +89,8 @@ public class PowerService {
             result.setSuccess(true);
             result.setData(userInfo1);
         } catch (Exception ex) {
-            log.error("新增用户失败：" + ex.toString());
-
-            result.setMsg("新增用户失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            log.error("新增用户" + userInfo.getUserName() + "失败：" + ex.toString());
+            result.setMsg("新增用户失败，请重试！" );
             return result;
         }
         return result;
@@ -156,10 +151,7 @@ public class PowerService {
             result.setData(roleInfos);
         } catch (Exception ex) {
             log.error("获取用户 " + userId + " 的角色信息失败：" + ex.toString());
-
-            result.setMsg("获取用户 " + userId + " 的角色信息失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("获取用户 " + userId + " 的角色信息失败！" );
             return result;
         }
         return result;
@@ -179,16 +171,13 @@ public class PowerService {
             }
             List<MenuInfo> menuTree = getMenuTreeList(0, menuInfos);
 
-            result.setMsg("获取角色" + roleId + "菜单成功！");
+            result.setMsg("获取角色菜单成功！");
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setSuccess(true);
             result.setData(menuTree);
         } catch (Exception ex) {
             log.error("获取角色" + roleId + "菜单失败：" + ex.toString());
-
-            result.setMsg("获取角色" + roleId + "菜单失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("获取角色菜单失败！");
             return result;
 
         }
@@ -228,10 +217,7 @@ public class PowerService {
             result.setData(roleInfos);
         } catch (Exception ex) {
             log.error("获取用户 角色信息失败：" + ex.toString());
-
-            result.setMsg("获取用户角色信息失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("获取用户角色信息失败！" );
             return result;
         }
 
@@ -244,15 +230,12 @@ public class PowerService {
         try {
             powerBusiness.updateUserRole(userId, roleList);
             redisService.clearUserRole();
-            result.setMsg("更新用户" + userId + " 角色信息成功！");
+            result.setMsg("更新用户角色信息成功！");
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setSuccess(true);
         } catch (Exception ex) {
             log.error("更新用户" + userId + " 角色信息失败：" + ex.toString());
-
-            result.setMsg("更新用户" + userId + " 角色信息失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("更新用户角色信息失败！" );
             return result;
         }
         return result;
@@ -263,15 +246,12 @@ public class PowerService {
         try {
             powerBusiness.updateRoleMenu(roleId, menuList);
             redisService.clearRoleMenus();
-            result.setMsg("更新角色" + roleId + " 菜单信息成功！");
+            result.setMsg("更新角色菜单信息成功！");
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setSuccess(true);
         } catch (Exception ex) {
             log.error("更新角色" + roleId + " 菜单信息失败：" + ex.toString());
-
-            result.setMsg("更新角色" + roleId + " 菜单信息失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("更新角色菜单信息失败！" );
             return result;
         }
 
@@ -287,15 +267,12 @@ public class PowerService {
             initPassword = Common.BytesConvertToHexString(EncryptionStrBytes(initPassword, "MD5")).toUpperCase();
             int count = powerBusiness.updatePassword(userId, initPassword);
             redisService.clearUserInfo();//从redis清空用户信息的缓存
-            result.setMsg("初始化用户" + userId + " 密码成功！");
+            result.setMsg("初始化用户密码成功！");
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setSuccess(true);
         } catch (Exception ex) {
             log.error("初始化用户" + userId + " 密码失败：" + ex.toString());
-
-            result.setMsg("初始化用户" + userId + " 密码失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("初始化用户密码失败！" );
             return result;
         }
 
@@ -309,10 +286,7 @@ public class PowerService {
 
             if (isExitRole(roleInfo.getRoleName())) {
                 log.error("新增角色失败：" + roleInfo.getRoleName() + "已存在该角色名");
-
                 result.setMsg("新增角色失败：" + roleInfo.getRoleName() + "已存在该角色名");
-                result.setCode(NormalConstant.FAILE_CODE);
-                result.setSuccess(false);
                 return result;
             }
             roleInfo.setStatus(NormalConstant.NORMAL_STATUS);
@@ -327,10 +301,7 @@ public class PowerService {
 
         } catch (Exception ex) {
             log.error("新增角色失败：" + ex.toString());
-
-            result.setMsg("新增角色失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("新增角色失败！");
             return result;
         }
 
@@ -343,10 +314,7 @@ public class PowerService {
         try {
             if (isExitRoleName(roleInfo.getRoleName(), roleInfo.getRoleId())) {
                 log.error("更新角色失败：" + roleInfo.getRoleName() + "已存在该角色名");
-
                 result.setMsg("更新角色失败：" + roleInfo.getRoleName() + "已存在该角色名");
-                result.setCode(NormalConstant.FAILE_CODE);
-                result.setSuccess(false);
                 return result;
             }
 
@@ -359,10 +327,7 @@ public class PowerService {
 
         } catch (Exception ex) {
             log.error("更新角色失败：" + ex.toString());
-
-            result.setMsg("更新角色失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("更新角色失败！" );
             return result;
         }
 
@@ -381,10 +346,7 @@ public class PowerService {
             result.setData(menuTree);
         } catch (Exception ex) {
             log.error("获取菜单失败：" + ex.toString());
-
-            result.setMsg("获取菜单失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("获取菜单失败！" );
             return result;
         }
 
@@ -397,10 +359,7 @@ public class PowerService {
             Integer menuId = menuInfo.getMenuId();
             if (isExitMenu(menuId)) {
                 log.error("新增" + menuId + "菜单失败：该编号已存在！");
-
                 result.setMsg("新增" + menuId + "菜单失败：该编号已存在！");
-                result.setCode(NormalConstant.FAILE_CODE);
-                result.setSuccess(false);
                 return result;
             }
 
@@ -414,10 +373,7 @@ public class PowerService {
 
         } catch (Exception ex) {
             log.error("新增菜单失败：" + ex.toString());
-
-            result.setMsg("新增菜单失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("新增菜单失败!");
             return result;
         }
 
@@ -456,10 +412,7 @@ public class PowerService {
                     menuInfo.setMenuId(0);
                 } else {
                     log.error("获取菜单失败：没有编号为" + menuId + "的菜单！");
-
                     result.setMsg("获取菜单失败：没有编号为" + menuId + "的菜单！");
-                    result.setCode(NormalConstant.FAILE_CODE);
-                    result.setSuccess(false);
                     return result;
                 }
             }
@@ -474,10 +427,7 @@ public class PowerService {
 
         } catch (Exception ex) {
             log.error("获取菜单失败：" + ex.toString());
-
-            result.setMsg("获取菜单失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("获取菜单失败!" );
             return result;
         }
 
@@ -497,10 +447,7 @@ public class PowerService {
             result.setData(menuInfo1);
         } catch (Exception ex) {
             log.error("更新菜单失败：" + ex.toString());
-
-            result.setMsg("更新菜单失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("更新菜单失败!");
             return result;
         }
 
@@ -522,14 +469,9 @@ public class PowerService {
         }
         catch(Exception ex){
             log.error("删除菜单"+menuId+"失败：" + ex.toString());
-
-            result.setMsg("删除菜单"+menuId+"失败：" + ex.toString());
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setSuccess(false);
+            result.setMsg("删除菜单"+menuId+"失败!" );
             return result;
-
         }
-
         return result;
     }
 

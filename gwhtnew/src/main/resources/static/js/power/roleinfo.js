@@ -44,7 +44,7 @@ $(function () {
             }
         },
         close: function () {
-           // $(this).find("form")[0].reset();
+            // $(this).find("form")[0].reset();
         }
     });
 
@@ -80,7 +80,7 @@ function GetPageData(pCur, pSize, key) {
         return;
     }
     $.ajax({
-        url: "/getRoleInfo",
+        url: "getRoleInfo",
         async: false,
         type: "get",
         data: {key: key, page: pCur, size: pSize},
@@ -140,7 +140,7 @@ function DataSubmit() {
     switch (subtype) {
         case "add":
             $.ajax({
-                url: "/addRole",
+                url: "addRole",
                 type: "post",
                 async: false,
                 contentType: "application/json;charset=utf-8",
@@ -154,7 +154,7 @@ function DataSubmit() {
         case "update":
             model.roleId = myRoleId;
             $.ajax({
-                url: "/updateRole",
+                url: "updateRole",
                 type: "post",
                 async: false,
                 contentType: "application/json;charset=utf-8",
@@ -172,7 +172,7 @@ function DataSubmit() {
 
 function RefreshRoleInfo() {
     $.ajax({
-        url: "/redis/refreshRoleInfo",
+        url: "redis/refreshRoleInfo",
         type: "post",
         async: false,
         success: function (data) {
@@ -181,11 +181,20 @@ function RefreshRoleInfo() {
     });
 }
 
+function selectMenu(menuId) {
+    $('input[name=child' + menuId + ']').prop("checked", $('input[name=menus' + menuId + ']').prop("checked"));
+    if($('input[name=menus' + menuId + ']').prop("checked")==false){
+        $('input[name=child' + menuId + ']').prop("disabled",true);
+    }else{
+        $('input[name=child' + menuId + ']').prop("disabled",false);
+    }
+}
+
 function getMenu(roleId) {
     myRoleId = roleId;
     $('#dialog_menu_detail').html("");
     $.ajax({
-        url: "/getMenu",
+        url: "getMenu",
         type: "get",
         async: false,
         data: {roleId: roleId},
@@ -196,26 +205,29 @@ function getMenu(roleId) {
             else {
                 if (data.data != null && data.data.length > 0) {
                     var text = "";
+                    var disabled = "";
                     for (var i = 0; i < data.data.length; i++) {
-                        text +="<span>";
-                        if (data.data[i].chooseMenu == 1)
-                            text += "<input name='menus' type='checkbox' value='" + data.data[i].menuId + "' checked='checked' />" + data.data[i].menuName;
-                        else
-                            text += "<input  name='menus' type='checkbox' value='" + data.data[i].menuId + "'  />" + data.data[i].menuName;
-                        if(data.data[i].childMenus!=null&&data.data[i].childMenus.length>0){
-                            text+="<ul>";
-                            for(var j=0;j<data.data[i].childMenus.length;j++){
-                                text+="<li>";
-                                if (data.data[i].childMenus[j].chooseMenu == 1)
-                                    text += "<input name='menus' type='checkbox' value='" + data.data[i].childMenus[j].menuId + "' checked='checked' />" + data.data[i].childMenus[j].menuName;
-                                else
-                                    text += "<input  name='menus' type='checkbox' value='" + data.data[i].childMenus[j].menuId + "'  />" + data.data[i].childMenus[j].menuName;
-                                text+="</li>";
-                            }
-                            text+="</ul>";
+                        text += "<span><ul>";
+                        if (data.data[i].chooseMenu == 1) {
+                            text += "<li><input cb='menus'  name='menus" + data.data[i].menuId + "'  type='checkbox' value='" + data.data[i].menuId + "' checked='true' onclick='selectMenu(" + data.data[i].menuId + ")' />" + data.data[i].menuName;
+                            disabled = "";
+                        } else {
+                            text += "<li><input cb='menus'  name='menus" + data.data[i].menuId + "'  type='checkbox' value='" + data.data[i].menuId + "' onclick='selectMenu(" + data.data[i].menuId + ")' />" + data.data[i].menuName;
+                            disabled = "disabled='true'";
                         }
-                        text +="</span>";
-
+                        if (data.data[i].childMenus != null && data.data[i].childMenus.length > 0) {
+                            text += "<ul style='margin-left: 40px;'>";
+                            for (var j = 0; j < data.data[i].childMenus.length; j++) {
+                                text += "<li style='text-align:left'>";
+                                if (data.data[i].childMenus[j].chooseMenu == 1)
+                                    text += "<input cb='menus' name='child" + data.data[i].menuId + "' type='checkbox' value='" + data.data[i].childMenus[j].menuId + "' checked='true' " + disabled + " style='width:20px' />" + data.data[i].childMenus[j].menuName;
+                                else
+                                    text += "<input cb='menus' name='child" + data.data[i].menuId + "' type='checkbox' value='" + data.data[i].childMenus[j].menuId + "' " + disabled + "  style='width:20px' />" + data.data[i].childMenus[j].menuName;
+                                text += "</li>";
+                            }
+                            text += "</ul></li>";
+                        }
+                        text += "</ul></span>";
                     }
                     $('#dialog_menu_detail').append(text);
                     $("#dialog_menu_detail").dialog("open");
@@ -227,19 +239,19 @@ function getMenu(roleId) {
 }
 
 function roleMenuSubmit() {
-var menus=new Array();
-$('input[name=menus]:checked').each(function(){
-    menus.push($(this).val());
-});
-$.ajax({
-    url:"/updateRoleMenu",
-    type:"post",
-    async:false,
-    data:{roleId:myRoleId,menuList:menus},
-    success:function(){
-
-    }
-});
+    var menus = new Array();
+    $('input[cb=menus]:checked').each(function () {
+        menus.push($(this).val());
+    });
+    $.ajax({
+        url: "updateRoleMenu",
+        type: "post",
+        async: false,
+        data: {roleId: myRoleId, menuList: menus},
+        success: function (data) {
+            alert(data.msg);
+        }
+    });
 }
 
 

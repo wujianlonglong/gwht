@@ -72,8 +72,8 @@
     </span>
     <!--总页数多于7页，当前大于5-->
     <span th:if="(${totalPage}&gt;${maxShowPage}) and (${pageNum}&gt;(${maxShowPage}-2))">
-        <a th:attr="href='javascript:void(0);'" th:utext="1"></a>
-        <a th:attr="href='javascript:void(0);'" th:utext="2"></a>
+       <a th:attr="href='#'" th:utext="1" th:onclick="'page(1)'"></a>
+        <a th:attr="href='#'" th:utext="2" th:onclick="'page(2)'"></a>
         <a th:attr="href='javascript:void(0);',class='disable'"><i th:utext="..."></i></a>
         <span th:if="(${pageNum} + 3) &gt;${totalPage}" th:each="i : ${#numbers.sequence( totalPage - 4, totalPage)}">
             <!--<div th:each="i : ${#numbers.sequence( pageNum - 1,  ((pageNum + 3) &gt; totalPage) ? totalPage:(pageNum + 3)}">-->

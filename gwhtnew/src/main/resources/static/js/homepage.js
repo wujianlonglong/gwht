@@ -18,7 +18,7 @@ function ChangeLoginPassword() {
             return;
         }
         $.ajax({
-            url: "/changePassword",
+            url: "changePassword",
             type: "post",
             async: false,
             data: {pwd1: pwd1, pwd2: pwd2, pwd3: pwd3},

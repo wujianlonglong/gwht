@@ -36,16 +36,18 @@ spring:
 
 # 设置redis服务
   redis:
-    database: 0
-    host: localhost
+    database: 14
+#    host: localhost
 #    host: srv3.sanjiang.info
+    host: 193.0.10.128
     port: 6379
 
 
 fileload:
-  gwimgurl: http://home.sanjiang.com/img/
-  gwhtimgurl: D:/www/sjow/img/
-  gwnewsrefreshurl: http://home.sanjiang.com/service/CacheManage.asmx/
+  gwimgurl: http://home.sanjiang.com/newsimg/
+  gwhtimgurl: D:/www/sjow/newsimg/
+  gwnewsrefreshurl: http://193.0.10.31/service/CacheManage.asmx/
+  gwurl:  http://home.sanjiang.com/
 
 #  gwimgurl: loadimg/
 #  gwhtimgurl: F:\JavaProjects\CompanyProject\gwhtnew\src\main\resources\static\loadimg\

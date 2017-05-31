@@ -11,13 +11,13 @@ import java.util.Date;
  * Created by wujianlong on 2017/5/19.
  */
 @Data
-@Entity(name = "NEWS_INFO_TEST")
+@Entity(name = "NEWS_INFO")
 @DynamicInsert(true)
 @DynamicUpdate(true)
 public class NewsInfoTest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "newsInfoTestGenerator")
-    @SequenceGenerator(name = "newsInfoTestGenerator", sequenceName = "News_INFO_Test_ID_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "newsInfoTestGenerator", sequenceName = "SEQ_NEWS_INFO_ID", allocationSize = 1)//ews_INFO_Test_ID_SEQ
     private Integer newsId;
 
     @Column(nullable = false, columnDefinition = "varchar2(2) default '0'")

@@ -82,7 +82,7 @@ function GetPageData(pCur, pSize, key) {
         return;
     }
     $.ajax({
-        url: "/getUserInfo",
+        url: "getUserInfo",
         async: false,
         type: "get",
         data: {key: key, page: pCur, size: pSize},
@@ -137,7 +137,7 @@ function updateSubmit(userId) {
     model.department = department;
 
     $.ajax({
-        url: "/updateuser",
+        url: "updateuser",
         type: "post",
         async: false,
         contentType: "application/json ;charset=utf-8",
@@ -202,7 +202,7 @@ function submitData(obj) {
             model.department = department;
 
             $.ajax({
-                url: "/adduser",
+                url: "adduser",
                 async: false,
                 type: "post",
                 contentType: "application/json; charset=utf-8",
@@ -222,7 +222,7 @@ function submitData(obj) {
 
 function RefreshUserInfo() {
     $.ajax({
-        url: "/redis/refreshUserInfo",
+        url: "redis/refreshUserInfo",
         type: "post",
         async: false,
         success: function (data) {
@@ -235,7 +235,7 @@ function getRole(id) {
     myId = id;
     $('#dialog_role_detail').html("");
     $.ajax({
-        url: "/getRole",
+        url: "getRole",
         type: "get",
         async: false,
         data: {userId: id},
@@ -266,7 +266,7 @@ function getRole(id) {
 
 function getAllRole() {
     $.ajax({
-        url: "/getAllRole",
+        url: "getAllRole",
         type: "get",
         async: false,
         success: function (data) {
@@ -281,7 +281,7 @@ function updateUserRole() {
         roleArray.push($(this).val());
     });
     $.ajax({
-        url: "/updateUserRole",
+        url: "updateUserRole",
         type: "post",
         async: false,
         data: {userId: myId, roleList: roleArray},
@@ -299,7 +299,11 @@ function initPassword(userid) {
         async: false,
         data: {userId: userid},
         success: function (data) {
-            alert(data.msg);
+            if (data.success) {
+                alert(data.msg + "初始化密码为：123456");
+            } else {
+                alert(data.msg);
+            }
         }
 
     });

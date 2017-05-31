@@ -17,4 +17,6 @@ public class GwhtFileUrl {
     private String gwimgurl;
 
     private String gwnewsrefreshurl;
+
+    private String gwurl;
 }

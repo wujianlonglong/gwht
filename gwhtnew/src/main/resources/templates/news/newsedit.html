@@ -24,13 +24,13 @@
             <tr>
                 <td>新闻类型：</td>
                 <td><select  id="newtype"><option value='0' th:selected="${newType}=='0'">公司新闻</option><option value='1' th:selected="${newType}=='1'">新店开业</option><option value='2' th:selected="${newType}=='2'">信息披露</option><option value='3' th:selected="${newType}=='3'">员工招聘</option></select></td>
-                <td>新闻标题：</td>
+                <td><span style="color:red;">*</span>新闻标题：</td>
                 <td colspan="3"><input type="text" id="tb_companyNewsTitle" th:value="${newsTitle}"/></td>
             </tr>
             <tr>
                 <td>是否置顶：</td>
                 <td><input type="checkbox" id="cb_isTop" th:checked="${isTop}=='1'" /></td>
-                <td>发布日期：</td>
+                <td><span style="color:red;">*</span>发布日期：</td>
                 <td><input type="text" id="datepicker" th:value="${showTime}" /> </td>
                 <td>来源：</td>
                 <td><input type="text" id="tb_newSource"  th:value="${showSource}==null?'三江官网':${showSource}" /></td>
@@ -43,7 +43,7 @@
             <tr>
                 <td colspan="6" class="style1" style="text-align:center">
                     <input type="button"  value="提交" onclick="addNews()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="button" value="返回"  onclick="Back()" />
+                    <input type="button" value="退出"  onclick="Back()" />
                 </td>
             </tr>
         </table>

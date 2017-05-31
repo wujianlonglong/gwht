@@ -6,6 +6,8 @@ import com.longer.model.ApiReturnBody;
 import com.longer.repository.RolesUsersRepository;
 import com.longer.utils.constant.NormalConstant;
 import com.longer.utils.constant.RedisConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RedisService {
+
+    private static final Logger log = LoggerFactory.getLogger(RedisService.class);
 
     private static Object lockOne = new Object();
 
@@ -57,6 +61,9 @@ public class RedisService {
 
     @Resource(name = "redisTemplate")
     protected ValueOperations<String, List<NewsInfoTest>> newsTestValueOperation;
+
+    @Resource(name = "redisTemplate")
+    protected ValueOperations<String, List<Memorabilia>> memorabiliaValueOperation;
 
     public List<Long> getUserRoles(Long userId) {
         List<Long> rolesUsersList = new ArrayList<>();
@@ -180,9 +187,9 @@ public class RedisService {
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setMsg("清空用户缓存成功！");
         } catch (Exception ex) {
-            result.setSuccess(false);
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setMsg("清空用户缓存失败：" + ex.toString());
+            log.error("清空用户缓存失败：" + ex.toString());
+            result.setMsg("清空用户缓存失败!");
+            return result;
         }
         return result;
     }
@@ -202,9 +209,9 @@ public class RedisService {
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setMsg("清空角色缓存成功！");
         } catch (Exception ex) {
-            result.setSuccess(false);
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setMsg("清空角色缓存失败：" + ex.toString());
+            log.error("清空角色缓存失败：" + ex.toString());
+            result.setMsg("清空角色缓存失败!");
+            return result;
         }
 
         return result;
@@ -239,9 +246,9 @@ public class RedisService {
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setMsg("清空用户角色缓存成功！");
         } catch (Exception ex) {
-            //  result.setSuccess(false);
-            // result.setCode(NormalConstant.FAILE_CODE);
-            result.setMsg("清空用户角色缓存失败：" + ex.toString());
+            log.error("清空用户角色缓存失败：" + ex.toString());
+            result.setMsg("清空用户角色缓存失败!");
+            return result;
         }
         return result;
     }
@@ -256,13 +263,12 @@ public class RedisService {
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setMsg("清空菜单缓存成功！");
         } catch (Exception ex) {
-            result.setSuccess(false);
-            result.setCode(NormalConstant.FAILE_CODE);
-            result.setMsg("清空菜单缓存失败：" + ex.toString());
+            log.error("清空菜单缓存失败：" + ex.toString());
+            result.setMsg("清空菜单缓存失败!");
+            return result;
         }
         return result;
     }
-
 
 
     public ApiReturnBody clearNewInfoTest() {
@@ -274,7 +280,24 @@ public class RedisService {
             result.setCode(NormalConstant.SUCCESS_CODE);
             result.setMsg("清空新闻信息列表缓存成功！");
         } catch (Exception ex) {
-            result.setMsg("清空新闻信息列表缓存失败：" + ex.toString());
+            log.error("清空新闻信息列表缓存失败：" + ex.toString());
+            result.setMsg("清空新闻信息列表缓存失败!");
+            return result;
+        }
+        return result;
+    }
+
+    public ApiReturnBody clearMemorabilia() {
+        String redisKey = RedisConstant.All_MEMORABILIA;
+        ApiReturnBody result = new ApiReturnBody();
+        try {
+            memorabiliaValueOperation.set(redisKey, null);
+            result.setSuccess(true);
+            result.setCode(NormalConstant.SUCCESS_CODE);
+            result.setMsg("清空大事记列表缓存成功！");
+        } catch (Exception ex) {
+            log.error("清空大事记列表缓存失败：" + ex.toString());
+            result.setMsg("清空大事记列表缓存失败!");
             return result;
         }
         return result;

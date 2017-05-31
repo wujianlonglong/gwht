@@ -16,13 +16,13 @@ public interface NewsInfoTestRepository extends JpaRepository<NewsInfoTest,Strin
 
     @Transactional
     @Modifying
-    @Query(value = "update NEWS_INFO_TEST set IS_VALID=?2 where NEWS_ID=?1",nativeQuery = true)
+    @Query(value = "update NEWS_INFO set IS_VALID=?2 where NEWS_ID=?1",nativeQuery = true)//NEWS_INFO_TEST
     int  updateStatus(Integer newsId,String status);
 
 
     @Transactional
     @Modifying
-    @Query(value="update NEWS_INFO_TEST set NEWS_TITLE=?2,IS_TOP=?3,NEWS_CONTENT=?4,SHOW_SOURCE=?5,SHOW_TIME=?6,NEW_TYPE=?7  where NEWS_ID=?1",nativeQuery = true)
+    @Query(value="update NEWS_INFO set NEWS_TITLE=?2,IS_TOP=?3,NEWS_CONTENT=?4,SHOW_SOURCE=?5,SHOW_TIME=?6,NEW_TYPE=?7  where NEWS_ID=?1",nativeQuery = true)//NEWS_INFO_TEST
     int updateNews(Integer newsId, String newsTitle, String isTop, String newsContent, String showSource, Date showTime, String newType);
 
 }

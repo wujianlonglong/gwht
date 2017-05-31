@@ -1,6 +1,7 @@
 package com.longer.controller;
 
 import com.longer.common.Common;
+import com.longer.domain.Memorabilia;
 import com.longer.domain.NewsInfoTest;
 import com.longer.domain.RoleInfo;
 import com.longer.model.ApiReturnBody;
@@ -22,6 +23,7 @@ import org.thymeleaf.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -46,9 +48,11 @@ public class NewsTestController {
 
     private static final Logger logger = LoggerFactory.getLogger(NewsTestController.class);
 
+    SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+
 
     @RequestMapping(value = "/getNewsList", method = RequestMethod.GET)
-    public String getNewsList(Model model, HttpServletRequest request, int page, int size, String key) {
+    public String getNewsList(Model model, HttpServletRequest request, int page, int size, String key,String type) {
         if (request.getSession().getAttribute("USER_INFO") == null)
             return "redirect:login";
 
@@ -58,6 +62,10 @@ public class NewsTestController {
         if (!StringUtils.isEmpty(key)) {
             newsInfoTests = newsInfoTests.stream().filter(obj -> obj.getNewsTitle().contains(key)).collect(Collectors.toList());
         }
+        if(!type.equals("-1")){
+            newsInfoTests=newsInfoTests.stream().filter(obj->obj.getNewType().equals(type)).collect(Collectors.toList());
+        }
+
         newsInfoTests.sort(Comparator.comparing(NewsInfoTest::getCreateTime).reversed());
 
         int totalCount = newsInfoTests.size();
@@ -81,6 +89,43 @@ public class NewsTestController {
     }
 
 
+
+    @RequestMapping(value = "/getMemorabiliaList", method = RequestMethod.GET)
+    public String getMemorabiliaList(Model model, HttpServletRequest request, int page, int size, String key) {
+        if (request.getSession().getAttribute("USER_INFO") == null)
+            return "redirect:login";
+
+        PageRequest pageable = new PageRequest(page, size);
+        List<Memorabilia> memorabilias = newsTestService.getAllMemorabilia().getData();
+        //根据key筛选
+        if (!StringUtils.isEmpty(key)) {
+            memorabilias = memorabilias.stream().filter(obj -> obj.getContent().contains(key)).collect(Collectors.toList());
+        }
+        memorabilias.sort(Comparator.comparing(Memorabilia::getHappenDate).reversed());
+
+        int totalCount = memorabilias.size();
+        int startCount = (page - 1) * size;
+//        if(startCount>=totalCount)
+//        {
+//            model.addAttribute("hasOrder", false);
+//            model.addAttribute("erromsg","超出查询数量！");
+//            return "power/roleinfotemp";
+//        }
+        int endCount = totalCount >= page * size ? page * size : totalCount;
+        memorabilias = memorabilias.subList(startCount, endCount);
+        if (memorabilias.size() == 0 && pageable.getPageNumber() == 0) {
+            model.addAttribute("hasOrder", false);
+        } else {
+            model.addAttribute("hasOrder", true);
+            common.returnPageAttrSql(model, pageable, memorabilias, totalCount); //分页的页数从0开始
+        }
+
+        return "news/memorabilialisttemp";
+    }
+
+
+
+
     @RequestMapping(value = "/newsedit", method = RequestMethod.GET)
     public String newsedit(Model model, Integer newsId) {
         if (newsId != null && newsId > 0) {
@@ -92,9 +137,9 @@ public class NewsTestController {
                 model.addAttribute("newsTitle", newsInfoTest.getNewsTitle());
                 model.addAttribute("newType", newsInfoTest.getNewType());
                 model.addAttribute("isTop", newsInfoTest.getIsTop());
-                model.addAttribute("showTime", newsInfoTest.getShowTime());
+                model.addAttribute("showTime", format.format(newsInfoTest.getShowTime()));
                 model.addAttribute("showSource", newsInfoTest.getShowSource());
-                model.addAttribute("newsContent", newsInfoTest.getNewsContent());
+                model.addAttribute("newsContent", newsInfoTest.getNewsContent().replace("src=\"/", "src=\""+gwhtFileUrl.getGwurl()).replace("value=\"/", "value=\""+gwhtFileUrl.getGwurl()));
 
             }
 
@@ -103,6 +148,27 @@ public class NewsTestController {
 
         return "news/newsedit";
     }
+
+
+
+    @RequestMapping(value = "/memorabiliaedit", method = RequestMethod.GET)
+    public String memorabiliaedit(Model model, Integer id) {
+        if (id != null && id > 0) {
+            Memorabilia memorabilia = newsTestService.getmemorabilia(id);
+            if (memorabilia == null) {
+                model.addAttribute("istrue", false);
+            } else {
+                model.addAttribute("istrue", true);
+                model.addAttribute("happenDate", format.format(memorabilia.getHappenDate()));
+                model.addAttribute("content", memorabilia.getContent().replace("src=\"/", "src=\""+gwhtFileUrl.getGwurl()).replace("value=\"/", "value=\""+gwhtFileUrl.getGwurl()));
+            }
+
+        }
+        model.addAttribute("id", id);
+
+        return "news/memorabiliaedit";
+    }
+
 
 
     @RequestMapping(value = "/updateStatus", method = RequestMethod.POST)
@@ -114,6 +180,18 @@ public class NewsTestController {
             return result;
         }
         result = newsTestService.updateStatus(newsId, status);
+        return result;
+    }
+
+    @RequestMapping(value = "/updateMemorStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiReturnBody updateMemorStatus(Integer id, Integer  status) {
+        ApiReturnBody result = new ApiReturnBody();
+        if (id == null || status == null) {
+            result.setMsg("参数不能为空！");
+            return result;
+        }
+        result = newsTestService.updateMemorStatus(id, status);
         return result;
     }
 
@@ -139,6 +217,7 @@ public class NewsTestController {
             logger.info("上传的后缀名为：" + suffixName);
             // 文件上传路径
             String filePath = gwhtFileUrl.getGwhtimgurl();
+            //String filePath =this.getClass().getClassLoader().getResource("/").getPath()+"static/loadimg/";
             // 解决中文问题，liunx下中文路径，图片显示问题
             fileName = UUID.randomUUID() + suffixName;
             File dest = new File(filePath + fileName);
@@ -170,9 +249,63 @@ public class NewsTestController {
             result.setMsg("请求参数为空！");
             return result;
         }
+        if(StringUtils.isEmpty(newsInfoTest.getNewsTitle().trim())){
+            result.setMsg("请求参数新闻标题为空！");
+            return result;
+        }
+        if(StringUtils.isEmpty(newsInfoTest.getNewsContent().trim())){
+            result.setMsg("请求参数新闻内容为空！");
+            return result;
+        }
+        if(newsInfoTest.getShowTime()==null){
+            result.setMsg("请求参数发布日期为空！");
+            return result;
+        }
 
-        result=newsTestService.subNews(newsInfoTest);
+        result = newsTestService.subNews(newsInfoTest);
         return result;
     }
+
+    @RequestMapping(value = "/subMemor", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiReturnBody subMemor(@RequestBody Memorabilia memorabilia) {
+        ApiReturnBody result = new ApiReturnBody();
+        if (memorabilia == null) {
+            result.setMsg("请求参数为空！");
+            return result;
+        }
+        if(StringUtils.isEmpty(memorabilia.getContent())){
+            result.setMsg("请求参数大事记内容为空!");
+            return result;
+        }
+        if(memorabilia.getHappenDate()==null){
+            result.setMsg("请求参数大事记发生日期为空！");
+            return result;
+        }
+
+        result = newsTestService.subMemor(memorabilia);
+        return result;
+    }
+
+
+
+
+    @RequestMapping(value = "/refreshNewList", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiReturnBody refreshNewList() {
+        ApiReturnBody result = new ApiReturnBody();
+        result = newsTestService.refreshNewList();
+        return result;
+    }
+
+
+    @RequestMapping(value = "/refreshMemor", method = RequestMethod.POST)
+    @ResponseBody
+    public ApiReturnBody refreshMemor() {
+        ApiReturnBody result = new ApiReturnBody();
+        result = newsTestService.refreshMemor();
+        return result;
+    }
+
 
 }
