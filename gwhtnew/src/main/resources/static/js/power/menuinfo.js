@@ -342,6 +342,7 @@ function updateData() {
             alert(data.msg);
             if (data.success) {
                 getTree();
+                getPaAndChilMenu(menuId);
                 ClearDialog();
                 $("#moddialog").dialog("close");
             }
