@@ -10,6 +10,7 @@ import jdk.nashorn.internal.ir.RuntimeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,9 +63,10 @@ public class MainController {
 
     /**
      * 修改密码
-     * @param pwd1 原密码
-     * @param pwd2 新密码
-     * @param pwd3 重复新密码
+     *
+     * @param pwd1    原密码
+     * @param pwd2    新密码
+     * @param pwd3    重复新密码
      * @param request
      * @return
      */
@@ -72,7 +74,7 @@ public class MainController {
     @ResponseBody
     public ApiReturnBody changePassword(String pwd1, String pwd2, String pwd3, HttpServletRequest request) {
         ApiReturnBody result = new ApiReturnBody();
-        if(request.getSession().getAttribute("USER_INFO")==null){
+        if (request.getSession().getAttribute("USER_INFO") == null) {
             result.setMsg("Session过期，请退出重新登录！");
 //            result.setCode(NormalConstant.FAILE_CODE);
 //            result.setSuccess(false);
@@ -91,7 +93,7 @@ public class MainController {
         }
         UserInfo userInfo = JsonUtil.jsonToObject((String) request.getSession().getAttribute("USER_INFO"), UserInfo.class);
         Long userId = userInfo.getId();
-        result = mainService.changePassword(pwd1, pwd2, pwd3,userId);
+        result = mainService.changePassword(pwd1, pwd2, pwd3, userId);
         return result;
     }
 
@@ -118,10 +120,19 @@ public class MainController {
     }
 
 
-    @RequestMapping(value="/newslist",method=RequestMethod.GET)
-    public String newslist(){return "news/newslist";}
+    @RequestMapping(value = "/newslist", method = RequestMethod.GET)
+    public String newslist() {
+        return "news/newslist";
+    }
 
 
-    @RequestMapping(value="/memorabilialist",method=RequestMethod.GET)
-    public String memorabilialist(){return "news/memorabilialist";}
+    @RequestMapping(value = "/memorabilialist", method = RequestMethod.GET)
+    public String memorabilialist() {
+        return "news/memorabilialist";
+    }
+
+    @RequestMapping(value = "/importstore", method = RequestMethod.GET)
+    public String importstore() {
+        return "store/importstore";
+    }
 }
