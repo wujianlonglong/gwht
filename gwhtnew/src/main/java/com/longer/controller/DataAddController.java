@@ -58,7 +58,6 @@ public class DataAddController {
         menuInfo.setComments("测试备注");
         menuInfo.setStatus(1);
         menuInfoRepository.save(menuInfo);
-
     }
     @RequestMapping(value = "/menuaddch", method = RequestMethod.GET)
     public void menuaddch() {

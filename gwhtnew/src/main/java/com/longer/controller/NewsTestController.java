@@ -48,11 +48,11 @@ public class NewsTestController {
 
     private static final Logger logger = LoggerFactory.getLogger(NewsTestController.class);
 
-    SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 
     @RequestMapping(value = "/getNewsList", method = RequestMethod.GET)
-    public String getNewsList(Model model, HttpServletRequest request, int page, int size, String key,String type) {
+    public String getNewsList(Model model, HttpServletRequest request, int page, int size, String key, String type) {
         if (request.getSession().getAttribute("USER_INFO") == null)
             return "redirect:login";
 
@@ -62,8 +62,8 @@ public class NewsTestController {
         if (!StringUtils.isEmpty(key)) {
             newsInfoTests = newsInfoTests.stream().filter(obj -> obj.getNewsTitle().contains(key)).collect(Collectors.toList());
         }
-        if(!type.equals("-1")){
-            newsInfoTests=newsInfoTests.stream().filter(obj->obj.getNewType().equals(type)).collect(Collectors.toList());
+        if (!type.equals("-1")) {
+            newsInfoTests = newsInfoTests.stream().filter(obj -> obj.getNewType().equals(type)).collect(Collectors.toList());
         }
 
         newsInfoTests.sort(Comparator.comparing(NewsInfoTest::getCreateTime).reversed());
@@ -87,7 +87,6 @@ public class NewsTestController {
 
         return "news/newslisttemp";
     }
-
 
 
     @RequestMapping(value = "/getMemorabiliaList", method = RequestMethod.GET)
@@ -124,10 +123,8 @@ public class NewsTestController {
     }
 
 
-
-
     @RequestMapping(value = "/newsedit", method = RequestMethod.GET)
-    public String newsedit(Model model, Integer newsId) {
+    public String newsedit(Model model, Integer newsId, Integer type) {
         if (newsId != null && newsId > 0) {
             NewsInfoTest newsInfoTest = newsTestService.getNewsInfoTest(newsId);
             if (newsInfoTest == null) {
@@ -139,16 +136,15 @@ public class NewsTestController {
                 model.addAttribute("isTop", newsInfoTest.getIsTop());
                 model.addAttribute("showTime", format.format(newsInfoTest.getShowTime()));
                 model.addAttribute("showSource", newsInfoTest.getShowSource());
-                model.addAttribute("newsContent", newsInfoTest.getNewsContent().replace("src=\"/", "src=\""+gwhtFileUrl.getGwurl()).replace("value=\"/", "value=\""+gwhtFileUrl.getGwurl()));
-
+                model.addAttribute("newsContent", newsInfoTest.getNewsContent().replace("src=\"/", "src=\"" + gwhtFileUrl.getGwurl()).replace("value=\"/", "value=\"" + gwhtFileUrl.getGwurl()));
             }
-
+        }else{
+            model.addAttribute("newType",type);
         }
         model.addAttribute("newsId", newsId);
 
         return "news/newsedit";
     }
-
 
 
     @RequestMapping(value = "/memorabiliaedit", method = RequestMethod.GET)
@@ -160,7 +156,7 @@ public class NewsTestController {
             } else {
                 model.addAttribute("istrue", true);
                 model.addAttribute("happenDate", format.format(memorabilia.getHappenDate()));
-                model.addAttribute("content", memorabilia.getContent().replace("src=\"/", "src=\""+gwhtFileUrl.getGwurl()).replace("value=\"/", "value=\""+gwhtFileUrl.getGwurl()));
+                model.addAttribute("content", memorabilia.getContent().replace("src=\"/", "src=\"" + gwhtFileUrl.getGwurl()).replace("value=\"/", "value=\"" + gwhtFileUrl.getGwurl()));
             }
 
         }
@@ -168,7 +164,6 @@ public class NewsTestController {
 
         return "news/memorabiliaedit";
     }
-
 
 
     @RequestMapping(value = "/updateStatus", method = RequestMethod.POST)
@@ -185,7 +180,7 @@ public class NewsTestController {
 
     @RequestMapping(value = "/updateMemorStatus", method = RequestMethod.POST)
     @ResponseBody
-    public ApiReturnBody updateMemorStatus(Integer id, Integer  status) {
+    public ApiReturnBody updateMemorStatus(Integer id, Integer status) {
         ApiReturnBody result = new ApiReturnBody();
         if (id == null || status == null) {
             result.setMsg("参数不能为空！");
@@ -249,15 +244,15 @@ public class NewsTestController {
             result.setMsg("请求参数为空！");
             return result;
         }
-        if(StringUtils.isEmpty(newsInfoTest.getNewsTitle().trim())){
+        if (StringUtils.isEmpty(newsInfoTest.getNewsTitle().trim())) {
             result.setMsg("请求参数新闻标题为空！");
             return result;
         }
-        if(StringUtils.isEmpty(newsInfoTest.getNewsContent().trim())){
+        if (StringUtils.isEmpty(newsInfoTest.getNewsContent().trim())) {
             result.setMsg("请求参数新闻内容为空！");
             return result;
         }
-        if(newsInfoTest.getShowTime()==null){
+        if (newsInfoTest.getShowTime() == null) {
             result.setMsg("请求参数发布日期为空！");
             return result;
         }
@@ -274,11 +269,11 @@ public class NewsTestController {
             result.setMsg("请求参数为空！");
             return result;
         }
-        if(StringUtils.isEmpty(memorabilia.getContent())){
+        if (StringUtils.isEmpty(memorabilia.getContent())) {
             result.setMsg("请求参数大事记内容为空!");
             return result;
         }
-        if(memorabilia.getHappenDate()==null){
+        if (memorabilia.getHappenDate() == null) {
             result.setMsg("请求参数大事记发生日期为空！");
             return result;
         }
@@ -286,8 +281,6 @@ public class NewsTestController {
         result = newsTestService.subMemor(memorabilia);
         return result;
     }
-
-
 
 
     @RequestMapping(value = "/refreshNewList", method = RequestMethod.POST)

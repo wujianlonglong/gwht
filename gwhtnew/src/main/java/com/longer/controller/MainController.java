@@ -125,6 +125,22 @@ public class MainController {
         return "news/newslist";
     }
 
+    @RequestMapping(value = "/companynews", method = RequestMethod.GET)
+    public String companynews() {
+        return "news/companynews";
+    }
+
+
+    @RequestMapping(value = "/newstorenews", method = RequestMethod.GET)
+    public String newstorenews() {
+        return "news/newstorenews";
+    }
+
+    @RequestMapping(value = "/invokenews", method = RequestMethod.GET)
+    public String invokenews() {
+        return "news/invokenews";
+    }
+
 
     @RequestMapping(value = "/memorabilialist", method = RequestMethod.GET)
     public String memorabilialist() {

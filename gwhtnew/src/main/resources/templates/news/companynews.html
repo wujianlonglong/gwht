@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <!--<link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>-->
+    <!--<link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet"/>-->
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="css/base.css" rel="stylesheet" type="text/css"/>
+    <link href="js/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui-1.11.4.custom/jquery-ui.js" type="text/javascript"></script>
+    <script src="js/news/newslist.js"></script>
+
+</head>
+<body>
+<!--过滤-->
+<div class="searchBar">
+    <div class="titleBar">
+        <span class="icoT"></span>
+        <div class="title" id="Div2">
+            搜索栏
+        </div>
+    </div>
+    <div class="filterBar" style="text-align: left;">
+        新闻类型:
+        <select id="newstype" disabled="disabled"><option value="-1">-全部-</option><option value='0' selected="selected">公司新闻</option><option value='1'>新店开业</option><option value='2'>信息披露</option><option value='3'>员工招聘</option></select>
+        新闻标题：
+        <input id="ConditionInput" type="text" style="width: 30%"/>
+        <input id="SearchInput" type="button" value="搜索" class="sjmsbutton1" onclick="SearchData();"/>
+        <input id="Button2" type="button" value="刷新前端新闻" class="sjmsbutton1" onclick="RefreshNewList();"
+               style="margin-left: 150px;display:none"/>
+    </div>
+</div>
+<div class="titleBar" style="text-align:left">
+    <input type="button" onclick="newData(0);" value="新增新闻"/>
+</div>
+<div id="tmp">
+</div>
+</body>
+</html>

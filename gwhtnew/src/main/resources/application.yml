@@ -36,11 +36,14 @@ spring:
 
 # 设置redis服务
   redis:
-    database: 14
+    database: 0
 #    host: localhost
 #    host: srv3.sanjiang.info
-    host: 193.0.10.128
+#    host: 193.0.10.128
+    host: 193.0.10.223
     port: 6379
+
+
 
 
 fileload:
