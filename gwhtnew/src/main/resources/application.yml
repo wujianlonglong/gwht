@@ -43,7 +43,11 @@ spring:
     host: 193.0.10.223
     port: 6379
 
-
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 10Mb
+      max-request-size: 100Mb
 
 
 fileload:
@@ -57,4 +61,6 @@ fileload:
 #  gwnewsrefreshurl:  http://localhost:36906/service/CacheManage.asmx/
 #  gwimgurl:  http://localhost:36906/loadimg/
 #  gwhtimgurl: F:\Project\SJOW\SJOW.Web\loadimg\
+
+
 

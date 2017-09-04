@@ -137,7 +137,8 @@ public class NewsTestService {
 
         restTemplate.postForObject(gwhtFileUrl.getGwnewsrefreshurl()+"RefreshHrNewsDict",
                 entity, Object.class);
-
+        restTemplate.postForObject(gwhtFileUrl.getGwnewsrefreshurl()+"RefreshInvestorNewsDict",
+                entity, Object.class);
         restTemplate.postForObject(gwhtFileUrl.getGwnewsrefreshurl()+"RefreshStoreNewsDict",
                 entity, Object.class);
         restTemplate.postForObject(gwhtFileUrl.getGwnewsrefreshurl()+"RefreshCompanyNewsDict",
